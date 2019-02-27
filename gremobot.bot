@@ -1,0 +1,53 @@
+{
+    "name": "gremobot",
+        "services": [
+        {
+            "type": "abs",
+            "tenantId": "6c1d4152-39d0-44ca-88d9-b8d6ddca0708",
+            "subscriptionId": "655e416b-5878-4986-8dd2-7e6848bda6ea",
+            "resourceGroup": "HKUST_HCI",
+            "serviceName": "GremoBot",
+            "name": "GremoBot",
+            "id": "1",
+            "appId": "3667e270-8494-4738-9019-106fa23effd4"
+        },
+        {
+            "type": "blob",
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=gremobotb6f0;AccountKey=1jbjT9bAmRpN5yw+npJtLpc/gczq6L1AnCsJGTijdTB+bYh0Py7X2/AzziwjjQIN0TyRIZM9au015Pkr7qPANA==;",
+            "tenantId": "6c1d4152-39d0-44ca-88d9-b8d6ddca0708",
+            "subscriptionId": "655e416b-5878-4986-8dd2-7e6848bda6ea",
+            "resourceGroup": "HKUST_HCI",
+            "serviceName": "gremobotb6f0",
+            "id": "2"
+        },
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3978/api/messages",
+            "name": "development",
+            "id": "3"
+        },
+        {
+            "type": "endpoint",
+            "appId": "3667e270-8494-4738-9019-106fa23effd4",
+            "appPassword": "Z7_J&.1G%$;0*YZs)b;+=FvKBB",
+            "endpoint": "https://gremobot.azurewebsites.net/api/messages",
+            "name": "production",
+            "id": "4"
+        },
+        {
+            "type": "appInsights",
+            "instrumentationKey": "41c1d843-b082-4beb-b95f-cbe4efa4da97",
+            "applicationId": "c4d0c8c9-3359-4c6a-82ed-6cfd1a06e579",
+            "apiKeys": {},
+            "tenantId": "6c1d4152-39d0-44ca-88d9-b8d6ddca0708",
+            "subscriptionId": "655e416b-5878-4986-8dd2-7e6848bda6ea",
+            "resourceGroup": "HKUST_HCI",
+            "serviceName": "GremoBotzxvi5z",
+            "id": "5"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0"
+}
