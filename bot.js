@@ -366,6 +366,7 @@ class MyBot {
                                     }
                                 ]
                             }
+                            await turnContext.sendActivity('Ha,ha,ha');
                             await turnContext.sendActivity(vis_emotion);
                             return [0, 0, 0];
                         }
