@@ -4,7 +4,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const restify = require('restify');
-var rp = require('request-promise');
+
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter, TurnContext } = require('botbuilder');
@@ -33,7 +33,7 @@ const server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, () => {
     console.log(`\n${ server.name } listening to ${ server.url }`);
     console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
-    console.log(`\nTo talk to your bot, open HKUSTHCIBot1.bot file in the Emulator`);
+    console.log(`\nTo talk to your bot, open gremobot.bot file in the Emulator`);
 });
 
 // .bot file path
@@ -69,77 +69,42 @@ adapter.onTurnError = async (context, error) => {
     await context.sendActivity(`Oops. Something went wrong!`);
 };
 
+// Create the main dialog.
+const myBot = new MyBot();
 
+var date = new Date();
+var last_time;
 var listenFlag = true;
 var timeout = null;
-var onTurn_return;
-var timeout_interval = 5000;
 var reference;
-function listen5min(timeout_interval, current_emotion){
+function listen5min(context){
     return setTimeout(async function(){
         if(listenFlag){
             //send message
             console.log('1111')
             adapter.continueConversation(reference, async (proactiveTurnContext) => {
                 // Notify the user that the job is complete.
-                let image_rp_params = {
-                    method : 'POST',
-                    uri : "http://47.75.124.98:80/api/getimage",
-                    body: current_emotion,
-                    json: true
-                };
-    
-                var png_base64;
-                function get_image() {
-                    return rp(image_rp_params)
-                    .then(function (parsedBody){
-                    // console.log(parsedBody);
-                        png_base64 = parsedBody;
-                    })
-                    .catch(function (err) {
-                        throw err;
-                    });
-                }
-                await get_image();
-                var GremoBot_dialogue = 'Seems like the chat is inactive for a while, here is the summary of recent group emotion.';
-                var vis_emotion = {
-                    "type": "message",
-                    "text": GremoBot_dialogue,
-                    "attachments": [
-                        {
-                            "contentType": "image/png",
-                            "contentUrl": png_base64, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAAAABmJLR0QA/wD/AP+gvaeTAAACy0lEQVR4nO3cMQ7DMAwEQSrIvw2/3ClSpE0nLTDzgqsWrLhmZmaeazjEuncvgFO9dg8A+JdgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkvHcPgNM9M9fuDXy5sIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyPDT/USPH+LHWHPvnsCPCwvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CAjA+JWgcS+58wIAAAAABJRU5ErkJggg==",//optimizedSVGDataURI, // canvas.toDataURL(),//"https://studyabroad.ust.hk/files/1VV_8833.jpg", //optimizedSVGDataURI, //
-                            "name": "Group emotion summary"
-                        }
-                    ]
-                }
-                await proactiveTurnContext.sendActivity(vis_emotion);
+                await proactiveTurnContext.sendActivity(`Are you away?`);
             });
         }
-    }, timeout_interval)
+    }, 3000000)
 }
-
-
-
-// Create the main dialog.
-const myBot = new MyBot();
 
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {
+    // last_time = date.getTime();
+    // console.log(last_time);
     adapter.processActivity(req, res, async (context) => {
         // Route to main dialog.
-        onTurn_return = await myBot.onTurn(context);
-        var taskFlag = onTurn_return[0];
-        timeout_interval = onTurn_return[1]  * 1000;
-        var current_emotion = onTurn_return[2];
+        await myBot.onTurn(context);
         listenFlag = true;
         try{
             clearTimeout(timeout)
         }catch(e){
         }
-        if (taskFlag == true) {
-            reference = TurnContext.getConversationReference(context.activity);
-            timeout = listen5min(timeout_interval, current_emotion);
-        }
+        reference = TurnContext.getConversationReference(context.activity);
+        timeout = listen5min();
+        
     });
 });
+
