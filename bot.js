@@ -360,9 +360,8 @@ class MyBot {
                                 "text": GremoBot_dialogue,
                                 "attachments": [
                                     {
-                                        //"contentType": "image/png",
-                                        //"contentUrl": png_base64, 
-                                        "image_url": png_base64,
+                                        "contentType": "image/png",
+                                        "contentUrl": png_base64, 
                                         "name": "Group emotion summary"
                                     }
                                 ]
