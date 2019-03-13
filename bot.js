@@ -66,7 +66,7 @@ class MyBot {
                 }
                 let image_rp_params = {
                     method : 'POST',
-                    uri : "http://47.75.124.98:80/api/getimage",
+                    uri : "http://127.0.0.1:80/api/getimage",
                     body: json_group_emotion,
                     json: true
                 };
@@ -361,12 +361,11 @@ class MyBot {
                                 "attachments": [
                                     {
                                         "contentType": "image/png",
-                                        "contentUrl": 'http://aka.ms/Fo983c',//png_base64, 
+                                        "contentUrl": png_base64, 
                                         "name": "Group emotion summary"
                                     }
                                 ]
                             }
-                            await turnContext.sendActivity('Ha,ha,ha');
                             await turnContext.sendActivity(vis_emotion);
                             return [0, 0, 0];
                         }
