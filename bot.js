@@ -42,6 +42,10 @@ var history_sentiment = []; // Track sentiment at each time step
 var T1 = 15; // Note: T1 is the time interval for current group emotion
 var T2 = 10; // T2 is the time for pause.
 
+var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
+var dialogues_regulation_pool = [['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.'], ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
+
+
 var task_flag = false;
 var task_mode = 'with'; // or 'without'
 class MyBot {
@@ -339,12 +343,12 @@ class MyBot {
                                 body: json_group_emotion,
                                 json: true
                             };
-                            var png_base64;
+                            var png_url;
                             function get_image() {
                                 return rp(image_rp_params)
                                 .then(function (parsedBody){
                                 // console.log(parsedBody);
-                                    png_base64 = parsedBody;
+                                    png_url = parsedBody;
                                 })
                                 .catch(function (err) {
                                     throw err;
@@ -353,20 +357,30 @@ class MyBot {
                             
                             await get_image();
 
+                            // var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
+                            // var dialogues_regulation_pool = [['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.'], ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
+
+                            var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
+                            var random_2 = Math.floor(Math.random() * dialogues_regulation_pool[0].length);
+                            var random_3 = Math.floor(Math.random() * dialogues_regulation_pool[1].length);
+                            var dialogue_reason = dialogues_reason_pool[random_1];
+                            var dialogues_regulation = dialogues_regulation_pool[0][random_2] + ' ' + dialogues_regulation_pool[1][random_3];
+                            
                             // Should design different dialogue for different conditions here.
-                            var GremoBot_dialogue = 'Hey, we can do better!';
+                            // var GremoBot_dialogue = 'Hey, we can do better!';
                             var vis_emotion = {
                                 "type": "message",
-                                "text": GremoBot_dialogue,
+                                "text": dialogue_reason,
                                 "attachments": [
                                     {
                                         "contentType": "image/png",
-                                        "contentUrl": png_base64, 
+                                        "contentUrl": png_url, 
                                         "name": "Group emotion summary"
                                     }
                                 ]
                             }
                             await turnContext.sendActivity(vis_emotion);
+                            await turnContext.sendActivity(dialogues_regulation);
                             return [0, 0, 0];
                         }
                     }
