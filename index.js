@@ -157,6 +157,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                             }
                         ]
                     }
+                    console.log(png_url);
                     await proactiveTurnContext.sendActivity(vis_emotion);
                     await proactiveTurnContext.sendActivity(dialogues_regulation);
                 }

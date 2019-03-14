@@ -40,7 +40,7 @@ var per_message_count = 0;
 var history_message_count = [];
 var history_sentiment = []; // Track sentiment at each time step
 var T1 = 90; // Note: T1 is the time interval for current group emotion
-var T2 = 45; // T2 is the time for pause.
+var T2 = 30; // T2 is the time for pause.
 
 var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
 var dialogues_regulation_pool = [['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.'], ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
@@ -122,7 +122,7 @@ class MyBot {
                 return [0, 0, 0,0];
             }
 
-            // collection_name = 'group_1';
+            collection_name = 'group_1_local';
             // The command format is: "start task 2."
             if (text.search(/start task/i) > -1) {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
@@ -570,7 +570,7 @@ class MyBot {
 
 
         } else {
-            return [0,0,0];
+            return [0,0,0,0];
             //await turnContext.sendActivity(`[${ turnContext.activity.type } event detected]`);
         }
         
