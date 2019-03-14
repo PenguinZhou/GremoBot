@@ -116,7 +116,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     
                     var current_positive_pool = [];
                     if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.66) current_positive_pool.push(dialogues_regulation_positive_pool[0]);
-                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.33) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
+                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.4) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
 
                     var tones = current_emotion['tones'];
                     var p = [tones[4], tones[5], tones[0]];

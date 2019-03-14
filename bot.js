@@ -312,7 +312,7 @@ class MyBot {
                 console.log(json_group_emotion);
 
             
-                var threshold_neg = 0.33;
+                var threshold_neg = 0.4;
                 var threshold_pos = 0.66;
                 var m = 10;
                 var n = 4;
