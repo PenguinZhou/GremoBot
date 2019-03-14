@@ -141,7 +141,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                         dialogues_regulation_positive = current_positive_pool[random_2];
                     }
 
-                    var random_3 = Math.floor(Math.random() * dialogues_reason_pool.length);
+                    var random_3 = Math.floor(Math.random() * dialogues_regulation_attention_pool.length);
                     var dialogues_regulation_attention = dialogues_regulation_attention_pool[random_3];
 
                     var dialogues_regulation = dialogues_regulation_positive + ' ' + dialogues_regulation_attention;
