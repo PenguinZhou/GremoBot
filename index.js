@@ -66,7 +66,7 @@ adapter.onTurnError = async (context, error) => {
     // This check writes out errors to console log .vs. app insights.
     console.error(`\n [onTurnError]: ${ error }`);
     // Send a message to the user
-    await context.sendActivity(`Oops. Something went wrong!`);
+    // await context.sendActivity(`Oops. Something went wrong!`);
 };
 
 
@@ -84,7 +84,7 @@ function argMax(array) {
     return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
   }
 
-function listen5min(timeout_interval, current_emotion){
+function listen5min(timeout_interval, current_emotion, taskMode){
     return setTimeout(async function(){
         if(listenFlag){
             //send message
@@ -110,54 +110,59 @@ function listen5min(timeout_interval, current_emotion){
                 }
                 await get_image();
 
-                var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
-                var dialogues_reason = dialogues_reason_pool[random_1];
-                
-                var current_positive_pool = [];
-                if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.66) current_positive_pool.push(dialogues_regulation_positive_pool[0]);
-                else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.33) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
+                if (taskMode == 1) {
+                    var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
+                    var dialogues_reason = dialogues_reason_pool[random_1];
+                    
+                    var current_positive_pool = [];
+                    if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.66) current_positive_pool.push(dialogues_regulation_positive_pool[0]);
+                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.33) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
 
-                var tones = current_emotion['tones'];
-                var p = [tones[4], tones[5], tones[0]];
-                if (p[0] > p[1]) {
-                    if (p[0] > p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[2]);
-                    else if (p[0] < p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[4]);
-                    else {current_positive_pool.push(dialogues_regulation_positive_pool[2]); current_positive_pool.push(dialogues_regulation_positive_pool[4]);}
-                }
-                else if (p[0] < p[1]){
-                    if (p[1] > p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[3]);
-                    else if (p[1] < p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[4]);
-                    else {current_positive_pool.push(dialogues_regulation_positive_pool[3]); current_positive_pool.push(dialogues_regulation_positive_pool[4]);}
+                    var tones = current_emotion['tones'];
+                    var p = [tones[4], tones[5], tones[0]];
+                    if (p[0] > p[1]) {
+                        if (p[0] > p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[2]);
+                        else if (p[0] < p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[4]);
+                        else {current_positive_pool.push(dialogues_regulation_positive_pool[2]); current_positive_pool.push(dialogues_regulation_positive_pool[4]);}
+                    }
+                    else if (p[0] < p[1]){
+                        if (p[1] > p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[3]);
+                        else if (p[1] < p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[4]);
+                        else {current_positive_pool.push(dialogues_regulation_positive_pool[3]); current_positive_pool.push(dialogues_regulation_positive_pool[4]);}
+                    }
+                    else {
+                        if (p[0] > p[2]) {current_positive_pool.push(dialogues_regulation_positive_pool[2]); current_positive_pool.push(dialogues_regulation_positive_pool[3]);}
+                        else if (p[0] < p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[4]);
+                        else {current_positive_pool.push(dialogues_regulation_positive_pool[2]); current_positive_pool.push(dialogues_regulation_positive_pool[3]); current_positive_pool.push(dialogues_regulation_positive_pool[4])}
+                    }
+                    var dialogues_regulation_positive = '';
+                    if (current_positive_pool.length > 0) {
+                        var random_2 = Math.floor(Math.random() * current_positive_pool.length);
+                        dialogues_regulation_positive = current_positive_pool[random_2];
+                    }
+
+                    var random_3 = Math.floor(Math.random() * dialogues_reason_pool.length);
+                    var dialogues_regulation_attention = dialogues_regulation_attention_pool[random_3];
+
+                    var dialogues_regulation = dialogues_regulation_positive + ' ' + dialogues_regulation_attention;
+                    // var GremoBot_dialogue = 'Seems like the chat is inactive for a while, here is the summary of recent group emotion.';
+                    var vis_emotion = {
+                        "type": "message",
+                        "text": dialogues_reason,
+                        "attachments": [
+                            {
+                                "contentType": "image/png",
+                                "contentUrl": png_url, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAAAABmJLR0QA/wD/AP+gvaeTAAACy0lEQVR4nO3cMQ7DMAwEQSrIvw2/3ClSpE0nLTDzgqsWrLhmZmaeazjEuncvgFO9dg8A+JdgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkvHcPgNM9M9fuDXy5sIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyPDT/USPH+LHWHPvnsCPCwvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CAjA+JWgcS+58wIAAAAABJRU5ErkJggg==",//optimizedSVGDataURI, // canvas.toDataURL(),//"https://studyabroad.ust.hk/files/1VV_8833.jpg", //optimizedSVGDataURI, //
+                                "name": "Group emotion summary"
+                            }
+                        ]
+                    }
+                    await proactiveTurnContext.sendActivity(vis_emotion);
+                    await proactiveTurnContext.sendActivity(dialogues_regulation);
                 }
                 else {
-                    if (p[0] > p[2]) {current_positive_pool.push(dialogues_regulation_positive_pool[2]); current_positive_pool.push(dialogues_regulation_positive_pool[3]);}
-                    else if (p[0] < p[2]) current_positive_pool.push(dialogues_regulation_positive_pool[4]);
-                    else {current_positive_pool.push(dialogues_regulation_positive_pool[2]); current_positive_pool.push(dialogues_regulation_positive_pool[3]); current_positive_pool.push(dialogues_regulation_positive_pool[4])}
+                    console.log('Nothing happen');
                 }
-                var dialogues_regulation_positive = '';
-                if (current_positive_pool.length > 0) {
-                    var random_2 = Math.floor(Math.random() * current_positive_pool.length);
-                    dialogues_regulation_positive = current_positive_pool[random_2];
-                }
-
-                var random_3 = Math.floor(Math.random() * dialogues_reason_pool.length);
-                var dialogues_regulation_attention = dialogues_regulation_attention_pool[random_3];
-
-                var dialogues_regulation = dialogues_regulation_positive + ' ' + dialogues_regulation_attention;
-                var GremoBot_dialogue = 'Seems like the chat is inactive for a while, here is the summary of recent group emotion.';
-                var vis_emotion = {
-                    "type": "message",
-                    "text": dialogues_reason,
-                    "attachments": [
-                        {
-                            "contentType": "image/png",
-                            "contentUrl": png_url, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAAAABmJLR0QA/wD/AP+gvaeTAAACy0lEQVR4nO3cMQ7DMAwEQSrIvw2/3ClSpE0nLTDzgqsWrLhmZmaeazjEuncvgFO9dg8A+JdgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkvHcPgNM9M9fuDXy5sIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyPDT/USPH+LHWHPvnsCPCwvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CAjA+JWgcS+58wIAAAAABJRU5ErkJggg==",//optimizedSVGDataURI, // canvas.toDataURL(),//"https://studyabroad.ust.hk/files/1VV_8833.jpg", //optimizedSVGDataURI, //
-                            "name": "Group emotion summary"
-                        }
-                    ]
-                }
-                await proactiveTurnContext.sendActivity(vis_emotion);
-                await proactiveTurnContext.sendActivity(dialogues_regulation);
             });
         }
     }, timeout_interval)
@@ -176,6 +181,7 @@ server.post('/api/messages', (req, res) => {
         var taskFlag = onTurn_return[0];
         timeout_interval = onTurn_return[1]  * 1000;
         var current_emotion = onTurn_return[2];
+        var taskMode = onTurn_return[3];
         listenFlag = true;
         try{
             clearTimeout(timeout)
@@ -183,7 +189,7 @@ server.post('/api/messages', (req, res) => {
         }
         if (taskFlag == true) {
             reference = TurnContext.getConversationReference(context.activity);
-            timeout = listen5min(timeout_interval, current_emotion);
+            timeout = listen5min(timeout_interval, current_emotion, taskMode);
         }
     });
 });

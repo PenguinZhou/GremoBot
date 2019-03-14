@@ -99,7 +99,7 @@ class MyBot {
                     ]
                 }
                 await turnContext.sendActivity(vis_emotion);
-            return [0,0,0];
+            return [0,0,0,0];
             }
 
             // Check if it is setting the time interval T1
@@ -109,7 +109,7 @@ class MyBot {
                 console.log('Before setting, time interval: ' + T1);
                 T1 = text.match(/\d+/);
                 console.log('After setting, time interval: ' + T1);
-                return [0, 0, 0];
+                return [0, 0, 0,0];
             }
 
             // Check if it is setting the time interval T1
@@ -119,10 +119,10 @@ class MyBot {
                 console.log('Before setting, time interval: ' + T2);
                 T2 = text.match(/\d+/);
                 console.log('After setting, time interval: ' + T2);
-                return [0, 0, 0];
+                return [0, 0, 0,0];
             }
 
-            collection_name = 'group_1';
+            // collection_name = 'group_1';
             // The command format is: "start task 2."
             if (text.search(/start task/i) > -1) {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
@@ -137,7 +137,7 @@ class MyBot {
                 }
                 task_flag = true;
                 console.log('Start the task, start processing text messages.');
-                return [0, 0, 0];
+                return [0, 0, 0, 0];
             }
 
             if (task_flag) {
@@ -174,7 +174,7 @@ class MyBot {
                         });
                     });
                     task_flag = false;
-                    return [0, 0, 0];
+                    return [0, 0, 0, 0];
                 }
  
                       
@@ -305,61 +305,62 @@ class MyBot {
                     'interval_to_lastT1': interval_to_lastT1,
                     'user': turnContext.activity.from.name,
                     'message': text,
-                    'time': turnContext.activity.timestamp
+                    'time': turnContext.activity.timestamp,
+                    'group_name': collection_name
                 }
                 console.log('Current json_group_emotion');
                 console.log(json_group_emotion);
 
-                if (task_mode == 'with') {
-                    var threshold_neg = 0.33;
-                    var threshold_pos = 0.66;
-                    var m = 10;
-                    var n = 5;
-                    var recen_neg_count = 0;
-                    var negative_flag = false;
-                    if (all_sentiment.length - mark_negative_start == m) mark_negative_start++;
-                    for (var i = mark_start; i < all_sentiment.length; i++) {
-                        if (all_sentiment[i] < threshold_neg) recen_neg_count++;
-                    }
-                    if (recen_neg_count >= n) {
-                        negative_flag = true;
-                        mark_negative_start = all_sentiment.length;
-                    }                
+            
+                var threshold_neg = 0.33;
+                var threshold_pos = 0.66;
+                var m = 10;
+                var n = 5;
+                var recen_neg_count = 0;
+                var negative_flag = false;
+                if (all_sentiment.length - mark_negative_start == m) mark_negative_start++;
+                for (var i = mark_start; i < all_sentiment.length; i++) {
+                    if (all_sentiment[i] < threshold_neg) recen_neg_count++;
+                }
+                if (recen_neg_count >= n) {
+                    negative_flag = true;
+                    mark_negative_start = all_sentiment.length;
+                }                
 
-                    if ( (current_sentiment < threshold_neg) || negative_flag) {
-                        var send_negative = false;
-                        if (last_send_negative_time == 0) {
-                            last_send_negative_time = timestamp;
-                            send_negative = true;
+                if ( (current_sentiment < threshold_neg) || negative_flag) {
+                    var send_negative = false;
+                    if (last_send_negative_time == 0) {
+                        last_send_negative_time = timestamp;
+                        send_negative = true;
+                    }
+                    else if (timestamp - last_send_negative_time > (T1 * 1000 / 2)) {
+                        send_negative = true;
+                        last_send_negative_time = timestamp;
+                    }
+                    if (send_negative){
+                        let image_rp_params = {
+                            method : 'POST',
+                            uri : "http://47.75.124.98:80/api/getimage",
+                            body: json_group_emotion,
+                            json: true
+                        };
+                        var png_url;
+                        function get_image() {
+                            return rp(image_rp_params)
+                            .then(function (parsedBody){
+                            // console.log(parsedBody);
+                                png_url = parsedBody;
+                            })
+                            .catch(function (err) {
+                                throw err;
+                            });
                         }
-                        else if (timestamp - last_send_negative_time > (T1 * 1000 / 2)) {
-                            send_negative = true;
-                            last_send_negative_time = timestamp;
-                        }
-                        if (send_negative){
-                            let image_rp_params = {
-                                method : 'POST',
-                                uri : "http://47.75.124.98:80/api/getimage",
-                                body: json_group_emotion,
-                                json: true
-                            };
-                            var png_url;
-                            function get_image() {
-                                return rp(image_rp_params)
-                                .then(function (parsedBody){
-                                // console.log(parsedBody);
-                                    png_url = parsedBody;
-                                })
-                                .catch(function (err) {
-                                    throw err;
-                                });
-                            }
-                            
-                            await get_image();
+                        
+                        await get_image();
 
                             // var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
                             // var dialogues_regulation_pool = [['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.'], ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
-
+                        if (task_mode == 'with') {
                             var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
                             var random_2 = Math.floor(Math.random() * dialogues_regulation_pool[0].length);
                             var random_3 = Math.floor(Math.random() * dialogues_regulation_pool[1].length);
@@ -381,16 +382,17 @@ class MyBot {
                             }
                             await turnContext.sendActivity(vis_emotion);
                             await turnContext.sendActivity(dialogues_regulation);
-                            return [0, 0, 0];
+                            return [0, 0, 0, 0];
                         }
+                        else return [0, 0, 0, 0];
                     }
                 }
-                else return [0, 0, 0];
-                if (task_mode = 'with')  return [task_flag, T2, json_group_emotion];
-                else return [0, 0, 0];
+                if (task_mode == 'with')  return [task_flag, T2, json_group_emotion, 1];
+                else if (task_mode == 'without') return [task_flag, T2, json_group_emotion, 0];
+                else return [0, 0, 0, 0];
                
             }
-            return [0, 0, 0];
+            return [0, 0, 0, 0];
             //     // while (true) {
             //     //     if (mark_end == all_timestamp.length) {
             //     //         console.log('For last interval in latest T1');
