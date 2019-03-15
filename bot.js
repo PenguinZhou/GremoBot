@@ -308,7 +308,8 @@ class MyBot {
                     'user': turnContext.activity.from.name,
                     'message': text,
                     'time': turnContext.activity.timestamp,
-                    'group_name': collection_name
+                    'group_name': collection_name,
+                    'task_num': task_num
                 }
                 console.log('Current json_group_emotion');
                 console.log(json_group_emotion);
