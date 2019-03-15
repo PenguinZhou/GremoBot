@@ -20,7 +20,7 @@ let url = "https://southeastasia.api.cognitive.microsoft.com/text/analytics/v2.0
 // Mongodb server srv connection string
 const MongoClient = require('mongodb').MongoClient;
 const mongodb_uri = "mongodb+srv://Harry:peng19950822@hkusthcicscw2019-phhot.azure.mongodb.net/test?retryWrites=true";
-const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
+
 
 var time_interval = 30;
 var start_time;
@@ -54,7 +54,7 @@ class MyBot {
      * @param {TurnContext} on turn context object.
      */
     async onTurn(turnContext) {
-        
+        const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
         if (turnContext.activity.type === ActivityTypes.Message) {
             var text = `${turnContext.activity.text}`;
             var collection_name = `${turnContext.activity.conversation.name}`;
@@ -122,7 +122,7 @@ class MyBot {
                 return [0, 0, 0,0];
             }
 
-            // collection_name = 'group_1_local';
+            collection_name = 'group_1_death';
             // The command format is: "start task 2."
             if (text.search(/start task/i) > -1) {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
@@ -155,25 +155,25 @@ class MyBot {
                     const collection = client.db("test").collection(collection_name);
                     console.log('Uploading data.');
                     collection.insertOne(task_data).then(function(r){
-                        overall_sentiment = []; 
-                        all_sentiment = [];
-                        history_sentiment = [];
-                        history_message_count = []; // reset the data
-                        overall_tone = [];
-                        all_tone = [];
-                        all_timestamp = [];
-                        mark_negative_start = 0;
-                        mark_start = 0;
-                        mark_end = 0;
-                        last_send_negative_time = 0;
-                        // overall_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
-                        // all_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
-                        // all_message_count = 0;
-                        // per_message_count = 0;
-                        console.log('Finish resetting.');
-                        client.close();
                         });
                     });
+                    client.close();
+                    overall_sentiment = []; 
+                    all_sentiment = [];
+                    history_sentiment = [];
+                    history_message_count = []; // reset the data
+                    overall_tone = [];
+                    all_tone = [];
+                    all_timestamp = [];
+                    mark_negative_start = 0;
+                    mark_start = 0;
+                    mark_end = 0;
+                    last_send_negative_time = 0;
+                    // overall_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
+                    // all_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
+                    // all_message_count = 0;
+                    // per_message_count = 0;
+                    console.log('Finish resetting.');
                     task_flag = false;
                     return [0, 0, 0, 0];
                 }
@@ -252,9 +252,10 @@ class MyBot {
                     upload_data['sentiment'] = sentiment; 
                     collection.insertOne(upload_data).then(function(r){
                         console.log('Successful upload');
-                        client.close();
+                        
                     });
                 });
+                client.close();
 
                 // Get sentiments and tones in last T1
                 all_timestamp.push(timestamp);
