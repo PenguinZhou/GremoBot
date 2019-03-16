@@ -310,7 +310,7 @@ class MyBot {
                     'task': task_name
                 };
                 client.connect(err => {
-                    const collection = client.db("test").collection(collection_name);
+                    const collection = client.db("pilot").collection(collection_name);
                     // perform actions on the collection object
                     upload_data['tone'] = tones;
                     upload_data['sentiment'] = sentiment; 
