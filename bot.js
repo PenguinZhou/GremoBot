@@ -119,7 +119,11 @@ class MyBot {
                 console.log('After setting, time interval: ' + T1);
                 return [0, 0, 0,0];
             }
-
+            
+            if (text.search(/fill your background information/i) > -1) { 
+                await turnContext.sendActivity(introduction_dilalogue);
+                return [0, 0, 0,0];
+            }
             // Check if it is setting the time interval T1
             // The command should has "set time interval t1" and contains the number to indicate the seconds, e.g., "120s".
             if (text.search(/set pause/i) > -1) { 
@@ -130,7 +134,7 @@ class MyBot {
                 return [0, 0, 0,0];
             }
 
-            collection_name = 'group_1_keep_going';
+            // collection_name = 'group_1_keep_going';
             
             // The command format is: "start task 2."
             // if (text.search(/start task/i) > -1) {
@@ -152,51 +156,51 @@ class MyBot {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'desert_survival';
                 task_flag = true;
-                task_count += 1;
+                // task_count += 1;
                 dialogues_suggestion_pool = desert_suggestions_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
-                if (is_first_task) {
-                    await turnContext.sendActivity(introduction_dilalogue);
-                    is_first_task = false;
-                }
-                if (task_count == 3) {
-                    task_count = 0;
-                    is_first_task = true;
-                }
+                // if (is_first_task) {
+                //     await turnContext.sendActivity(introduction_dilalogue);
+                //     is_first_task = false;
+                // }
+                // if (task_count == 3) {
+                //     task_count = 0;
+                //     is_first_task = true;
+                // }
                 return [0, 0, 0, 0];
             }
             if (text.search(/start creativity task/i) > -1) {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'creativity';
                 task_flag = true;
-                task_count += 1;
+                // task_count += 1;
                 dialogues_suggestion_pool = creativity_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
-                if (is_first_task) {
-                    await turnContext.sendActivity(introduction_dilalogue);
-                    is_first_task = false;
-                }
-                if (task_count == 3) {
-                    task_count = 0;
-                    is_first_task = true;
-                }
+                // if (is_first_task) {
+                //     await turnContext.sendActivity(introduction_dilalogue);
+                //     is_first_task = false;
+                // }
+                // if (task_count == 3) {
+                //     task_count = 0;
+                //     is_first_task = true;
+                // }
                 return [0, 0, 0, 0];
             }
             if (text.search(/start debate task/i) > -1) {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'debate';
                 task_flag = true;
-                task_count += 1;
+                // task_count += 1;
                 dialogues_suggestion_pool = debate_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
-                if (is_first_task) {
-                    await turnContext.sendActivity(introduction_dilalogue);
-                    is_first_task = false;
-                }
-                if (task_count == 3) {
-                    task_count = 0;
-                    is_first_task = true;
-                }
+                // if (is_first_task) {
+                //     await turnContext.sendActivity(introduction_dilalogue);
+                //     is_first_task = false;
+                // }
+                // if (task_count == 3) {
+                //     task_count = 0;
+                //     is_first_task = true;
+                // }
                 return [0, 0, 0, 0];
             }
             
