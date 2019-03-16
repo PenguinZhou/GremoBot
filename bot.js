@@ -40,21 +40,29 @@ var per_message_count = 0;
 var history_message_count = [];
 var history_sentiment = []; // Track sentiment at each time step
 var T1 = 90; // Note: T1 is the time interval for current group emotion
-var T2 = 40; // T2 is the time for pause.
+var T2 = 25; // T2 is the time for pause.
 
-var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
-var dialogues_regulation_pool = [['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.'], ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
-
-
+// var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
+var dialogues_reason_pool = ['Sorry to interrupt you, but I feel like the group is down for a while.', 'No offence but just a remind, the chat is about to be negative.'];
+var dialogues_regulation_pool = ['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.']; //, ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
+var desert_suggestions_pool = ['You all have provided useful information that helps build the big picture. Compromise has to be made for the whole team\'s survival.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'Your initial discussions have laid the groundwork. Keep the end goal in mind.', 'Your perspectives are all valid and they matter. This is a consensus-building process.'];
+var creativity_pool = ['It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Keep the ideas flowing and stay constructive.'];
+var debate_pool = ['It is a heated discussion. Everyone has a point but it is also important to know where you stand.', 'The key to a convincing argument is to make other people feel comfortable enough to change their position.', 'Honor the experience, but question the conclusion.'];
+var introduction_dilalogue = 'Hi, GremoBot here! I\'m the bot to monitor the group emotion in this channel, and will remind you if I sense potential negative feelings here. Enjoy the group chat now!';
 var task_flag = false;
+var is_first_task = true;
+var task_count = 0;
 var task_mode = 'with'; // or 'without'
+var task_name = '';
+var dialogues_suggestion_pool = [];
+const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
 class MyBot {
     /**
      *
      * @param {TurnContext} on turn context object.
      */
     async onTurn(turnContext) {
-        const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
+        
         if (turnContext.activity.type === ActivityTypes.Message) {
             var text = `${turnContext.activity.text}`;
             var collection_name = `${turnContext.activity.conversation.name}`;
@@ -122,25 +130,79 @@ class MyBot {
                 return [0, 0, 0,0];
             }
 
-            collection_name = 'group_1_death';
+            collection_name = 'group_1_keep_going';
+            
             // The command format is: "start task 2."
-            if (text.search(/start task/i) > -1) {
+            // if (text.search(/start task/i) > -1) {
+            //     var group_num = collection_name.match(/\d+/g).map(Number)[0]
+            //     var task_num = text.match(/\d+/g).map(Number)[0];
+            //     if (group_num % 2 == 1) {
+            //         if (task_num == 1) task_mode = 'with';
+            //         else task_mode = 'without';
+            //     }
+            //     else {
+            //         if (task_num == 1) task_mode = 'without';
+            //         else task_mode = 'with';
+            //     }
+            //     task_flag = true;
+            //     console.log('Start the task, start processing text messages.');
+            //     return [0, 0, 0, 0];
+            // }
+            if (text.search(/start desert survival task/i) > -1) {
                 var group_num = collection_name.match(/\d+/g).map(Number)[0]
-                var task_num = text.match(/\d+/g).map(Number)[0];
-                if (group_num % 2 == 1) {
-                    if (task_num == 1) task_mode = 'with';
-                    else task_mode = 'without';
-                }
-                else {
-                    if (task_num == 1) task_mode = 'without';
-                    else task_mode = 'with';
-                }
+                task_name = 'desert_survival';
                 task_flag = true;
-                console.log('Start the task, start processing text messages.');
+                task_count += 1;
+                dialogues_suggestion_pool = desert_suggestions_pool;
+                console.log(`Start the ${task_name} task, start processing text messages.`);
+                if (is_first_task) {
+                    await turnContext.sendActivity(introduction_dilalogue);
+                    is_first_task = false;
+                }
+                if (task_count == 3) {
+                    task_count = 0;
+                    is_first_task = true;
+                }
                 return [0, 0, 0, 0];
             }
+            if (text.search(/start creativity task/i) > -1) {
+                var group_num = collection_name.match(/\d+/g).map(Number)[0]
+                task_name = 'creativity';
+                task_flag = true;
+                task_count += 1;
+                dialogues_suggestion_pool = creativity_pool;
+                console.log(`Start the ${task_name} task, start processing text messages.`);
+                if (is_first_task) {
+                    await turnContext.sendActivity(introduction_dilalogue);
+                    is_first_task = false;
+                }
+                if (task_count == 3) {
+                    task_count = 0;
+                    is_first_task = true;
+                }
+                return [0, 0, 0, 0];
+            }
+            if (text.search(/start debate task/i) > -1) {
+                var group_num = collection_name.match(/\d+/g).map(Number)[0]
+                task_name = 'debate';
+                task_flag = true;
+                task_count += 1;
+                dialogues_suggestion_pool = debate_pool;
+                console.log(`Start the ${task_name} task, start processing text messages.`);
+                if (is_first_task) {
+                    await turnContext.sendActivity(introduction_dilalogue);
+                    is_first_task = false;
+                }
+                if (task_count == 3) {
+                    task_count = 0;
+                    is_first_task = true;
+                }
+                return [0, 0, 0, 0];
+            }
+            
 
             if (task_flag) {
+                
                 // Check if it is the end of the task. If yes, reset the sum_sentiment data.
                 // The command should has "end the task".
                 if (text.search(/I am ending the task/i) > -1) { 
@@ -149,15 +211,17 @@ class MyBot {
                         'group_sentiment': all_sentiment,
                         'period_sentiment': history_sentiment,
                         'group_tone': all_tone,
-                        'turns': history_message_count
+                        'turns': history_message_count,
+                        'task': task_name
                     }
                     client.connect(err => {
-                    const collection = client.db("test").collection(collection_name);
-                    console.log('Uploading data.');
-                    collection.insertOne(task_data).then(function(r){
+                        const collection = client.db("pilot").collection(collection_name);
+                        console.log('Uploading data.');
+                        collection.insertOne(task_data).then(function(r){
+                            // client.close();    
                         });
                     });
-                    client.close();
+                    
                     overall_sentiment = []; 
                     all_sentiment = [];
                     history_sentiment = [];
@@ -232,7 +296,7 @@ class MyBot {
                     });
                 }
                 await sleep(); 
-
+                // const client = new MongoClient(mongodb_uri, { useNewUrlParser: true });
                 var upload_data = {
                     'text': text,
                     'timestamp': turnContext.activity.timestamp,
@@ -243,7 +307,7 @@ class MyBot {
                     'channelData': turnContext.activity.channelData,
                     'fromId': turnContext.activity.from.id,
                     'fromName': turnContext.activity.from.name,
-                    'task_num': task_num
+                    'task': task_name
                 };
                 client.connect(err => {
                     const collection = client.db("test").collection(collection_name);
@@ -252,10 +316,10 @@ class MyBot {
                     upload_data['sentiment'] = sentiment; 
                     collection.insertOne(upload_data).then(function(r){
                         console.log('Successful upload');
-                        
+                        // client.close();
                     });
                 });
-                client.close();
+                
 
                 // Get sentiments and tones in last T1
                 all_timestamp.push(timestamp);
@@ -310,16 +374,16 @@ class MyBot {
                     'message': text,
                     'time': turnContext.activity.timestamp,
                     'group_name': collection_name,
-                    'task_num': task_num
+                    'task': task_name
                 }
                 console.log('Current json_group_emotion');
                 console.log(json_group_emotion);
 
             
-                var threshold_neg = 0.4;
+                var threshold_neg = 0.35;
                 var threshold_pos = 0.66;
                 var m = 10;
-                var n = 4;
+                var n = 3;
                 var recen_neg_count = 0;
                 var negative_flag = false;
                 if (all_sentiment.length - mark_negative_start == m) mark_negative_start++;
@@ -364,35 +428,35 @@ class MyBot {
 
                             // var dialogues_reason_pool = ['Stuck with some items?', 'Challenging task, isn\'t it?', 'Seems that finding the best solution is not that easy.', 'Hard to reach agreement?'];
                             // var dialogues_regulation_pool = [['The task is meant to thought-provoking.', 'It is important to keep a healthy discussion going.', 'I am sure that the group will work it out.', 'Keep an open mind and keep moving forward.'], ['You all have provided useful information that helps build the big picture. Has the group visited all possibilities?', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.']];
-                        if (task_mode == 'with') {
-                            var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
-                            var random_2 = Math.floor(Math.random() * dialogues_regulation_pool[0].length);
-                            var random_3 = Math.floor(Math.random() * dialogues_regulation_pool[1].length);
-                            var dialogue_reason = dialogues_reason_pool[random_1];
-                            var dialogues_regulation = dialogues_regulation_pool[0][random_2] + ' ' + dialogues_regulation_pool[1][random_3];
-                            
-                            // Should design different dialogue for different conditions here.
-                            // var GremoBot_dialogue = 'Hey, we can do better!';
-                            var vis_emotion = {
-                                "type": "message",
-                                "text": dialogue_reason,
-                                "attachments": [
-                                    {
-                                        "contentType": "image/png",
-                                        "contentUrl": png_url, 
-                                        "name": "Group emotion summary"
-                                    }
-                                ]
-                            }
-                            await turnContext.sendActivity(vis_emotion);
-                            await turnContext.sendActivity(dialogues_regulation);
-                            return [0, 0, 0, 0];
+                    
+                        var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
+                        var random_2 = Math.floor(Math.random() * dialogues_regulation_pool.length);
+                        var random_3 = Math.floor(Math.random() * dialogues_suggestion_pool.length);
+                        var dialogue_reason = dialogues_reason_pool[random_1];
+                        var dialogues_regulation = dialogues_regulation_pool[random_2];
+                        var dialogue_suggestion = 'Tip: ' + dialogues_suggestion_pool[random_3];
+                        
+                        // Should design different dialogue for different conditions here.
+                        // var GremoBot_dialogue = 'Hey, we can do better!';
+                        var vis_emotion = {
+                            "type": "message",
+                            "text": dialogue_reason,
+                            "attachments": [
+                                {
+                                    "contentType": "image/png",
+                                    "contentUrl": png_url, 
+                                    "name": "Group emotion summary"
+                                }
+                            ]
                         }
-                        else return [0, 0, 0, 0];
+                        await turnContext.sendActivity(vis_emotion);
+                        await turnContext.sendActivity(dialogues_regulation);
+                        await turnContext.sendActivity(dialogue_suggestion);
+                        return [0, 0, 0, 0];
                     }
                 }
-                if (task_mode == 'with')  return [task_flag, T2, json_group_emotion, 1];
-                else if (task_mode == 'without') return [task_flag, T2, json_group_emotion, 0];
+                if (task_flag)  return [task_flag, T2, json_group_emotion, 1];
+                // else if (task_mode == 'without') return [task_flag, T2, json_group_emotion, 0];
                 else return [0, 0, 0, 0];
                
             }

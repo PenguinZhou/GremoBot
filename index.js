@@ -76,10 +76,12 @@ var onTurn_return;
 var timeout_interval = 5000;
 var reference;
 
-var dialogues_reason_pool = ['Seems like the chat is inactive for a while.', 'Feels like it\'s been quite for a while.'];
+var dialogues_reason_pool = ['Umm...seems like the chat is inactive for a while.', 'Uh...feels like it\'s been quite for a few seconds.'];
 var dialogues_regulation_positive_pool = ['The group has been making nice progress in the past few minutes.', 'Seems that the group discussion has been quite smooth so far.', 'Good to see the group\'s confidence is building up.', 'Glad that the group is taking an analytical approach to the problem.', 'I find the discussions valuable and enjoyable.'];
-var dialogues_regulation_attention_pool = ['How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'Have the group covered every item in the list so far?', 'How many items have been filtered out? Perhaps the group can make a fresh start with the remaining ones.', 'Just a reminder that the group needs to come to a final decision within 20 minutes.'];
-
+// var dialogues_regulation_attention_pool = ['How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'Have the group covered every item in the list so far?', 'How many items have been filtered out? Perhaps the group can make a fresh start with the remaining ones.', 'Just a reminder that the group needs to come to a final decision within 20 minutes.'];
+var desert_pool = ['How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'Just a reminder that the ranking of the selected items is also very critical.'];
+var creativity_pool = ['Feel free to share any idea, however small. The group can refine it together.', 'Have no new idea? May try extending the existing ones.', 'Don\'t forget to check the budget. Efficient spending is important.', 'Just a reminder that the group needs to come up with at least eight ideas.'];
+var debate_pool = ['Try to express your opinions, as silience cannot help you win the debate.', 'Be bold and cast doubt, if any, upon the previous statements.', 'Whose turn is this? Make sure that you address previous questions raised about your point, if any.', 'Try to provide a clear evidence of your point.'];
 function argMax(array) {
     return array.map((x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
   }
@@ -114,9 +116,15 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
                     var dialogues_reason = dialogues_reason_pool[random_1];
                     
+
+                    var dialogues_regulation_attention_pool = [];
+                    if (current_emotion['task'] == 'desert_survival') dialogues_regulation_attention_pool = desert_pool;
+                    else if (current_emotion['task'] == 'creativity') dialogues_regulation_attention_pool = creativity_pool;
+                    else if (current_emotion['task'] == 'debate') dialogues_regulation_attention_pool = debate_pool;
+
                     var current_positive_pool = [];
                     if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.66) current_positive_pool.push(dialogues_regulation_positive_pool[0]);
-                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.4) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
+                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.35) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
 
                     var tones = current_emotion['tones'];
                     var p = [tones[4], tones[5], tones[0]];
@@ -144,7 +152,8 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     var random_3 = Math.floor(Math.random() * dialogues_regulation_attention_pool.length);
                     var dialogues_regulation_attention = dialogues_regulation_attention_pool[random_3];
 
-                    var dialogues_regulation = dialogues_regulation_positive + ' ' + dialogues_regulation_attention;
+                    var dialogues_regulation = dialogues_regulation_positive;
+                    var dialogues_suggestion = 'Tip: ' + dialogues_regulation_attention;
                     // var GremoBot_dialogue = 'Seems like the chat is inactive for a while, here is the summary of recent group emotion.';
                     var vis_emotion = {
                         "type": "message",
@@ -160,6 +169,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     console.log(png_url);
                     await proactiveTurnContext.sendActivity(vis_emotion);
                     await proactiveTurnContext.sendActivity(dialogues_regulation);
+                    await proactiveTurnContext.sendActivity(dialogues_suggestion);
                 }
                 else {
                     console.log('Nothing happen');
