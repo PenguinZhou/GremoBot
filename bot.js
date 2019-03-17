@@ -155,7 +155,7 @@ class MyBot {
             //     return [0, 0, 0, 0];
             // }
             if (text.search(/start desert survival task/i) > -1) {
-                var group_num = collection_name.match(/\d+/g).map(Number)[0]
+                // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'desert_survival';
                 task_flag = true;
                 // task_count += 1;
@@ -172,7 +172,7 @@ class MyBot {
                 return [0, 0, 0, 0];
             }
             if (text.search(/start creativity task/i) > -1) {
-                var group_num = collection_name.match(/\d+/g).map(Number)[0]
+                // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'creativity';
                 task_flag = true;
                 // task_count += 1;
@@ -189,7 +189,7 @@ class MyBot {
                 return [0, 0, 0, 0];
             }
             if (text.search(/start debate task/i) > -1) {
-                var group_num = collection_name.match(/\d+/g).map(Number)[0]
+                // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'debate';
                 task_flag = true;
                 // task_count += 1;
@@ -263,11 +263,11 @@ class MyBot {
                 }
                 // Process returned tone results
                 var tones = []; // Tones in each message   
+                var tones_vector = [0, 0, 0, 0, 0, 0, 0]; 
                 await sleep_for_tone(text)
                 .then(function (results) {
                     tones = results.document_tone.tones;
                     var num_tone = tones.length;
-                    var tones_vector = [0, 0, 0, 0, 0, 0, 0]; 
                     for (var i = 0; i < tones_label.length; i++) {
                         for (var j = 0; j < num_tone; j ++) {
                             if (tones_label[i] == tones[j].tone_id) tones_vector[i] = 1;
@@ -457,7 +457,7 @@ class MyBot {
                             ]
                         }
                         await turnContext.sendActivity(vis_emotion);
-                        await turnContext.sendActivity(dialogues_regulation);
+                        // await turnContext.sendActivity(dialogues_regulation);
                         await turnContext.sendActivity(dialogue_suggestion);
                         return [0, 0, 0, 0];
                     }
