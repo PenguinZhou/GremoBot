@@ -65,7 +65,7 @@ class MyBot {
         
         if (turnContext.activity.type === ActivityTypes.Message) {
             //test
-            await turnContext.sendActivity(':grinning: Hi')
+            // await turnContext.sendActivity(':grinning: Hi')
             var text = `${turnContext.activity.text}`;
             var collection_name = `${turnContext.activity.conversation.name}`;
             var date = new Date();
@@ -439,9 +439,9 @@ class MyBot {
                         var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
                         var random_2 = Math.floor(Math.random() * dialogues_regulation_pool.length);
                         var random_3 = Math.floor(Math.random() * dialogues_suggestion_pool.length);
-                        var dialogue_reason = dialogues_reason_pool[random_1];
+                        var dialogue_reason = ':sweat_smile: ' + dialogues_reason_pool[random_1];
                         var dialogues_regulation = dialogues_regulation_pool[random_2];
-                        var dialogue_suggestion = 'Tip: ' + dialogues_suggestion_pool[random_3];
+                        var dialogue_suggestion = 'Tip :point_right: ' + dialogues_suggestion_pool[random_3];
                         
                         // Should design different dialogue for different conditions here.
                         // var GremoBot_dialogue = 'Hey, we can do better!';

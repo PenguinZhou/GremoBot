@@ -114,7 +114,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
 
                 if (taskMode == 1) {
                     var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
-                    var dialogues_reason = dialogues_reason_pool[random_1];
+                    var dialogues_reason = ':thinking_face: ' + dialogues_reason_pool[random_1];
                     
 
                     var dialogues_regulation_attention_pool = [];
@@ -153,7 +153,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     var dialogues_regulation_attention = dialogues_regulation_attention_pool[random_3];
 
                     var dialogues_regulation = dialogues_regulation_positive;
-                    var dialogues_suggestion = 'Tip: ' + dialogues_regulation_attention;
+                    var dialogues_suggestion = 'Tip :point_right: ' + dialogues_regulation_attention;
                     // var GremoBot_dialogue = 'Seems like the chat is inactive for a while, here is the summary of recent group emotion.';
                     var vis_emotion = {
                         "type": "message",
@@ -168,7 +168,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     }
                     console.log(png_url);
                     await proactiveTurnContext.sendActivity(vis_emotion);
-                    await proactiveTurnContext.sendActivity(dialogues_regulation);
+                    // await proactiveTurnContext.sendActivity(dialogues_regulation);
                     await proactiveTurnContext.sendActivity(dialogues_suggestion);
                 }
                 else {
