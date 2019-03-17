@@ -48,7 +48,7 @@ var dialogues_regulation_pool = ['The task is meant to thought-provoking.', 'It 
 var desert_suggestions_pool = ['You all have provided useful information that helps build the big picture. Compromise has to be made for the whole team\'s survival.', 'Your perspectives are all valid and they matter. This is a consensus-building process.', 'Your initial discussions have laid the groundwork. Keep the end goal in mind.', 'Your perspectives are all valid and they matter. This is a consensus-building process.'];
 var creativity_pool = ['It is a good start with everything the group has shared so far. Perhaps think outside the box and be adventurous.', 'Each of you contributes good thoughts, maybe the group can summarize all the pros and cons for a better comparison.', 'Keep the ideas flowing and stay constructive.'];
 var debate_pool = ['It is a heated discussion. Everyone has a point but it is also important to know where you stand.', 'The key to a convincing argument is to make other people feel comfortable enough to change their position.', 'Honor the experience, but question the conclusion.'];
-var introduction_dilalogue = 'Hi, GremoBot here! I\'m the bot to monitor the group emotion in this channel, and will remind you if I sense potential negative feelings here. Enjoy the group chat now!';
+var introduction_dilalogue = 'Hi, GremoBot here! :grinning: I\'m the bot to monitor the group emotion in this channel, and will remind you if I sense potential negative feelings here. : Enjoy the group chat now!';
 var task_flag = false;
 var is_first_task = true;
 var task_count = 0;
@@ -123,7 +123,7 @@ class MyBot {
             }
             
             if (text.search(/fill your background information/i) > -1) { 
-                await turnContext.sendActivity(introduction_dilalogue);
+                // await turnContext.sendActivity(introduction_dilalogue);
                 return [0, 0, 0,0];
             }
             // Check if it is setting the time interval T1
@@ -159,17 +159,17 @@ class MyBot {
                 task_name = 'desert_survival';
                 task_flag = true;
                 T2 = 31;
-                // task_count += 1;
+                task_count += 1;
                 dialogues_suggestion_pool = desert_suggestions_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
-                // if (is_first_task) {
-                //     await turnContext.sendActivity(introduction_dilalogue);
-                //     is_first_task = false;
-                // }
-                // if (task_count == 3) {
-                //     task_count = 0;
-                //     is_first_task = true;
-                // }
+                if (is_first_task) {
+                    await turnContext.sendActivity(introduction_dilalogue);
+                    is_first_task = false;
+                }
+                if (task_count == 3) {
+                    task_count = 0;
+                    is_first_task = true;
+                }
                 return [0, 0, 0, 0];
             }
             if (text.search(/start creativity task/i) > -1) {
@@ -177,17 +177,17 @@ class MyBot {
                 task_name = 'creativity';
                 task_flag = true;
                 T2 = 43;
-                // task_count += 1;
+                task_count += 1;
                 dialogues_suggestion_pool = creativity_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
-                // if (is_first_task) {
-                //     await turnContext.sendActivity(introduction_dilalogue);
-                //     is_first_task = false;
-                // }
-                // if (task_count == 3) {
-                //     task_count = 0;
-                //     is_first_task = true;
-                // }
+                if (is_first_task) {
+                    await turnContext.sendActivity(introduction_dilalogue);
+                    is_first_task = false;
+                }
+                if (task_count == 3) {
+                    task_count = 0;
+                    is_first_task = true;
+                }
                 return [0, 0, 0, 0];
             }
             if (text.search(/start debate task/i) > -1) {
@@ -195,17 +195,17 @@ class MyBot {
                 task_name = 'debate';
                 task_flag = true;
                 T2 = 30
-                // task_count += 1;
+                task_count += 1;
                 dialogues_suggestion_pool = debate_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
-                // if (is_first_task) {
-                //     await turnContext.sendActivity(introduction_dilalogue);
-                //     is_first_task = false;
-                // }
-                // if (task_count == 3) {
-                //     task_count = 0;
-                //     is_first_task = true;
-                // }
+                if (is_first_task) {
+                    await turnContext.sendActivity(introduction_dilalogue);
+                    is_first_task = false;
+                }
+                if (task_count == 3) {
+                    task_count = 0;
+                    is_first_task = true;
+                }
                 return [0, 0, 0, 0];
             }
             
@@ -230,7 +230,8 @@ class MyBot {
                             // client.close();    
                         });
                     });
-                    
+                    if (text.search(/reset/i) > -1) task_count = 0;
+
                     overall_sentiment = []; 
                     all_sentiment = [];
                     history_sentiment = [];
