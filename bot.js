@@ -224,7 +224,7 @@ class MyBot {
                         'task': task_name
                     }
                     client.connect(err => {
-                        const collection = client.db("pilot").collection(collection_name);
+                        const collection = client.db("real").collection(collection_name);
                         console.log('Uploading data.');
                         collection.insertOne(task_data).then(function(r){
                             // client.close();    
@@ -320,7 +320,7 @@ class MyBot {
                     'task': task_name
                 };
                 client.connect(err => {
-                    const collection = client.db("pilot").collection(collection_name);
+                    const collection = client.db("real").collection(collection_name);
                     // perform actions on the collection object
                     upload_data['tone'] = tones;
                     upload_data['tones_vector'] = tones_vector;
