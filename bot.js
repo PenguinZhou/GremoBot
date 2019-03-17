@@ -64,6 +64,8 @@ class MyBot {
     async onTurn(turnContext) {
         
         if (turnContext.activity.type === ActivityTypes.Message) {
+            //test
+            await turnContext.sendActivity(':grinning: Hi')
             var text = `${turnContext.activity.text}`;
             var collection_name = `${turnContext.activity.conversation.name}`;
             var date = new Date();
@@ -317,6 +319,7 @@ class MyBot {
                     const collection = client.db("pilot").collection(collection_name);
                     // perform actions on the collection object
                     upload_data['tone'] = tones;
+                    upload_data['tones_vector'] = tones_vector;
                     upload_data['sentiment'] = sentiment; 
                     collection.insertOne(upload_data).then(function(r){
                         console.log('Successful upload');
