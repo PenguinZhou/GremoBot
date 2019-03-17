@@ -158,6 +158,7 @@ class MyBot {
                 // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'desert_survival';
                 task_flag = true;
+                T2 = 31;
                 // task_count += 1;
                 dialogues_suggestion_pool = desert_suggestions_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
@@ -175,6 +176,7 @@ class MyBot {
                 // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'creativity';
                 task_flag = true;
+                T2 = 43;
                 // task_count += 1;
                 dialogues_suggestion_pool = creativity_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
@@ -192,6 +194,7 @@ class MyBot {
                 // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'debate';
                 task_flag = true;
+                T2 = 30
                 // task_count += 1;
                 dialogues_suggestion_pool = debate_pool;
                 console.log(`Start the ${task_name} task, start processing text messages.`);
@@ -387,7 +390,7 @@ class MyBot {
                 console.log(json_group_emotion);
 
             
-                var threshold_neg = 0.35;
+                var threshold_neg = 0.33;
                 var threshold_pos = 0.66;
                 var m = 10;
                 var n = 3;
@@ -439,15 +442,17 @@ class MyBot {
                         var random_1 = Math.floor(Math.random() * dialogues_reason_pool.length);
                         var random_2 = Math.floor(Math.random() * dialogues_regulation_pool.length);
                         var random_3 = Math.floor(Math.random() * dialogues_suggestion_pool.length);
-                        var dialogue_reason = ':sweat_smile: ' + dialogues_reason_pool[random_1];
-                        var dialogues_regulation = dialogues_regulation_pool[random_2];
+                        var dialogue_reason = dialogues_reason_pool[random_1];
+                        var emoji = [':muscle: '];
+                        var random_emoji = Math.floor(Math.random() * emoji.length);
+                        var dialogues_regulation = emoji[random_emoji] + dialogues_regulation_pool[random_2];
                         var dialogue_suggestion = 'Tip :point_right: ' + dialogues_suggestion_pool[random_3];
                         
                         // Should design different dialogue for different conditions here.
                         // var GremoBot_dialogue = 'Hey, we can do better!';
                         var vis_emotion = {
                             "type": "message",
-                            "text": dialogue_reason,
+                            "text": dialogues_regulation,
                             "attachments": [
                                 {
                                     "contentType": "image/png",

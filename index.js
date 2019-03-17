@@ -77,7 +77,7 @@ var timeout_interval = 5000;
 var reference;
 
 var dialogues_reason_pool = ['Umm...seems like the chat is inactive for a while.', 'Uh...feels like it\'s been quite for a few seconds.'];
-var dialogues_regulation_positive_pool = ['The group has been making nice progress in the past few minutes.', 'Seems that the group discussion has been quite smooth so far.', 'Good to see the group\'s confidence is building up.', 'Glad that the group is taking an analytical approach to the problem.', 'I find the discussions valuable and enjoyable.'];
+var dialogues_regulation_positive_pool = [':smile: The group has been making nice progress in the past few minutes.', ':slightly_smile_face: Seems that the group discussion has been quite smooth so far.', ':clap: Good to see the group\'s confidence is building up.', ':writing_hand: Glad that the group is taking an analytical approach to the problem.', ':joy: I find the discussions valuable and enjoyable.'];
 // var dialogues_regulation_attention_pool = ['How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'Have the group covered every item in the list so far?', 'How many items have been filtered out? Perhaps the group can make a fresh start with the remaining ones.', 'Just a reminder that the group needs to come to a final decision within 20 minutes.'];
 var desert_pool = ['How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'How big is the candiate pool right now? Remember that the group needs to eventually narrow it down to five items.', 'Just a reminder that the ranking of the selected items is also very critical.'];
 var creativity_pool = ['Feel free to share any idea, however small. The group can refine it together.', 'Have no new idea? May try extending the existing ones.', 'Don\'t forget to check the budget. Efficient spending is important.', 'Just a reminder that the group needs to come up with at least eight ideas.'];
@@ -124,7 +124,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
 
                     var current_positive_pool = [];
                     if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.66) current_positive_pool.push(dialogues_regulation_positive_pool[0]);
-                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.35) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
+                    else if (current_emotion['sentiment'][current_emotion['sentiment'].length - 1] > 0.33) current_positive_pool.push(dialogues_regulation_positive_pool[1]);
 
                     var tones = current_emotion['tones'];
                     var p = [tones[4], tones[5], tones[0]];
@@ -157,7 +157,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                     // var GremoBot_dialogue = 'Seems like the chat is inactive for a while, here is the summary of recent group emotion.';
                     var vis_emotion = {
                         "type": "message",
-                        "text": dialogues_reason,
+                        "text": dialogues_regulation,
                         "attachments": [
                             {
                                 "contentType": "image/png",
