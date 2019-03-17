@@ -230,7 +230,10 @@ class MyBot {
                             // client.close();    
                         });
                     });
-                    if (text.search(/reset/i) > -1) task_count = 0;
+                    if (text.search(/reset/i) > -1) {
+                        task_count = 0;
+                        is_first_task = true;
+                    }
 
                     overall_sentiment = []; 
                     all_sentiment = [];
