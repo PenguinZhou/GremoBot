@@ -1,0 +1,26 @@
+{
+  "name": "soda",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "betterScripts": {
+    "server-dev": {
+      "command": "nodemon index",
+      "env": {
+        "PORT": "3001"
+      }
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "canvas": "^2.3.1",
+    "co": "^4.6.0",
+    "compression": "^1.6.2",
+    "express": "^4.13.4",
+    "express-jwt": "^3.4.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {}
+}

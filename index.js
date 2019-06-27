@@ -94,7 +94,7 @@ function listen5min(timeout_interval, current_emotion, taskMode){
                 // Notify the user that the job is complete.
                 let image_rp_params = {
                     method : 'POST',
-                    uri : "http://47.75.124.98:80/api/getimage",
+                    uri : "http://47.75.124.98:80/api/getimage", //Use your own server address
                     body: current_emotion,
                     json: true
                 };
