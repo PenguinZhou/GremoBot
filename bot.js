@@ -10,16 +10,16 @@ var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 
 var toneAnalyzer = new ToneAnalyzerV3({
   version: '2019-02-18',
-  iam_apikey: '_bBPYi_371EQWmW2m1Gn_HMSf9zkUawx0hlAXU35yMgn',
+  iam_apikey: 'your apikey', // put your ibm tone analyzer api key here
   url: 'https://gateway-tok.watsonplatform.net/tone-analyzer/api'
 });
 
-let accessKey = 'b02685e71305418e8c4b5d1f655bd617';
+let accessKey = 'your accessKey'; // put your microsoft text analytics key here
 let url = "https://southeastasia.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment"
 
 // Mongodb server srv connection string
 const MongoClient = require('mongodb').MongoClient;
-const mongodb_uri = "mongodb+srv://Harry:peng19950822@hkusthcicscw2019-phhot.azure.mongodb.net/test?retryWrites=true";
+const mongodb_uri = "mongodb+srv://..."; // Your mongodb url;
 
 
 var time_interval = 30;
@@ -80,7 +80,7 @@ class MyBot {
                 }
                 let image_rp_params = {
                     method : 'POST',
-                    uri : "http://127.0.0.1:80/api/getimage",
+                    uri : "http://127.0.0.1:80/api/getimage", // The url to your image drawing local server for testing. 
                     body: json_group_emotion,
                     json: true
                 };
@@ -138,22 +138,6 @@ class MyBot {
 
             // collection_name = 'group_1_keep_going';
             
-            // The command format is: "start task 2."
-            // if (text.search(/start task/i) > -1) {
-            //     var group_num = collection_name.match(/\d+/g).map(Number)[0]
-            //     var task_num = text.match(/\d+/g).map(Number)[0];
-            //     if (group_num % 2 == 1) {
-            //         if (task_num == 1) task_mode = 'with';
-            //         else task_mode = 'without';
-            //     }
-            //     else {
-            //         if (task_num == 1) task_mode = 'without';
-            //         else task_mode = 'with';
-            //     }
-            //     task_flag = true;
-            //     console.log('Start the task, start processing text messages.');
-            //     return [0, 0, 0, 0];
-            // }
             if (text.search(/start desert survival task/i) > -1) {
                 // var group_num = collection_name.match(/\d+/g).map(Number)[0]
                 task_name = 'desert_survival';
@@ -246,10 +230,6 @@ class MyBot {
                     mark_start = 0;
                     mark_end = 0;
                     last_send_negative_time = 0;
-                    // overall_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
-                    // all_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
-                    // all_message_count = 0;
-                    // per_message_count = 0;
                     console.log('Finish resetting.');
                     task_flag = false;
                     return [0, 0, 0, 0];
@@ -422,7 +402,7 @@ class MyBot {
                     if (send_negative){
                         let image_rp_params = {
                             method : 'POST',
-                            uri : "http://47.75.124.98:80/api/getimage",
+                            uri : "http://47.75.124.98:80/api/getimage", // The url to your image drawing online server for retrieving real-time visual feedback. 
                             body: json_group_emotion,
                             json: true
                         };
@@ -477,180 +457,6 @@ class MyBot {
                
             }
             return [0, 0, 0, 0];
-            //     // while (true) {
-            //     //     if (mark_end == all_timestamp.length) {
-            //     //         console.log('For last interval in latest T1');
-            //     //         console.log(mark_start);
-            //     //         console.log(mark_end);
-            //     //         // let tmp_sentiment = overall_sentiment.slice(mark_start, mark_end);
-            //     //         // let tmp_sum_sentiment = tmp_sentiment.reduce((previous, current) => current += previous);
-            //     //         // let tmp_ave_sentiment = (tmp_sum_sentiment / tmp_sentiment.length);
-                        
-            //     //         history_sentiment.push(current_sentiment);
-            //     //         break;
-            //     //     }
-            //     //     if (all_timestamp[mark_end] - all_timestamp[mark_start] < (T1 * 1000)){
-            //     //         mark_end ++;
-            //     //         continue;
-            //     //     }
-            //     //     console.log('For one interval T1');
-            //     //     console.log(mark_start);
-            //     //     console.log(mark_end);
-            //     //     let tmp_sentiment = overall_sentiment.slice(mark_start, mark_end);
-            //     //     let tmp_sum_sentiment = tmp_sentiment.reduce((previous, current) => current += previous);
-            //     //     let tmp_ave_sentiment = (tmp_sum_sentiment / tmp_sentiment.length);
-            //     //     if (history_sentiment.length > 0) history_sentiment.pop();
-            //     //     history_sentiment.push(tmp_ave_sentiment);
-            //     //     mark_start = mark_end;
-            //     // }
-
-                
-
-            //     // Every T1, store the data
-            //     if (date.getTime() - start_time > (T1 * 1000)) {
-            //         console.log(`Process group emotion in the past ${time_interval}s.`);
-            //         // var positive_sentiment_per = 0, neutral_sentiment_per = 0, negative_sentiment_per = 0, positive_sentiment_sum = 0, negative_sentiment_sum = 0, neutral_sentiment_sum = 0;
-            //         // for (var i = 0; i < overall_sentiment.length; i++) {
-            //         //     if (i < 0.35) negative_sentiment_per++;
-            //         //     else if (i > 0.65) positive_sentiment_per++;
-            //         //     else neutral_sentiment_per++;
-            //         // }
-            //         // for (var i = 0; i < all_sentiment.length; i++) {
-            //         //     if (i < 0.35) negative_sentiment_sum++;
-            //         //     else if (i > 0.65) positive_sentiment_sum++;
-            //         //     else neutral_sentiment_sum++;
-            //         // }
-            //         // var sum_joy = overall_tone.joy.reduce((previous, current) => current += previous),
-            //         //     sum_fear = overall_tone.fear.reduce((previous, current) => current += previous),
-            //         //     sum_sadness = overall_tone.sadness.reduce((previous, current) => current += previous),
-            //         //     sum_anger = overall_tone.anger.reduce((previous, current) => current += previous),
-            //         //     sum_analytical = overall_tone.analytical.reduce((previous, current) => current += previous),
-            //         //     sum_tentative = overall_tone.tentative.reduce((previous, current) => current += previous),
-            //         //     sum_confident = overall_tone.confident.reduce((previous, current) => current += previous);
-
-            //         var joy_per = overall_tone.joy.length, sadness_per = overall_tone.sadness.length, tentative_per = overall_tone.tentative.length,
-            //             anger_per = overall_tone.anger.length, fear_per = overall_tone.fear.length, confident_per = overall_tone.confident.length, 
-            //             analytical_per = overall_tone.analytical.length;
-            //         // var joy_sum_num = all_tone.joy.length, sadness_sum_num = all_tone.sadness.length, tentative_sum_num = all_tone.tentative.length,
-            //         //     anger_sum_num = all_tone.anger.length, fear_sum_num = all_tone.fear.length, confident_sum_num = all_tone.confident.length, 
-            //         //     analytical_sum_num = all_tone.analytical.length;           
-            //         // // Calculate the average tones.
-            //         // var average_joy = -1, average_fear = -1, average_sadness = -1, average_anger = -1, average_analytical = -1, average_tentative = -1, average_confident = -1;
-            //         // if (analytical_per > 0) {
-            //         //     var sum_analytical = overall_tone.analytical.reduce((previous, current) => current += previous);
-            //         //     average_analytical = (sum_analytical / analytical_per).toFixed(3);
-            //         // }
-            //         // if (anger_per > 0) {
-            //         //     var sum_anger = overall_tone.anger.reduce((previous, current) => current += previous);
-            //         //     average_anger = (sum_anger / anger_per).toFixed(3);
-            //         // }
-            //         // if (confident_per > 0) {
-            //         //     var sum_confident = overall_tone.confident.reduce((previous, current) => current += previous);
-            //         //     average_confident = (sum_confident / confident_per).toFixed(3);
-            //         // }
-            //         // if (fear_per > 0) {
-            //         //     var sum_fear = overall_tone.fear.reduce((previous, current) => current += previous);
-            //         //     average_fear = (sum_fear / fear_per).toFixed(3);
-            //         // }
-            //         // if (joy_per > 0) {
-            //         //     var sum_joy = overall_tone.joy.reduce((previous, current) => current += previous);
-            //         //     average_joy = (sum_joy / joy_per).toFixed(3);
-            //         // }
-            //         // if (sadness_per > 0) {
-            //         //     var sum_sadness = overall_tone.sadness.reduce((previous, current) => current += previous);
-            //         //     average_sadness = (sum_sadness / sadness_per).toFixed(3);
-            //         // }
-            //         // if (tentative_per > 0) {
-            //         //     var sum_tentative = overall_tone.tentative.reduce((previous, current) => current += previous);
-            //         //     average_tentative = (sum_tentative / tentative_per).toFixed(3);
-            //         // }
-                    
-            //         history_sentiment.push(average_sentiment);
-            //         history_message_count.push(per_message_count);
-
-            //         var group_emotion_num = `Estimated group emotion in the past ${time_interval}s, in number \n`
-            //             // + `Positive sentiment: ${positive_sentiment_per} \n`
-            //             // + `Neutral sentiment: ${neutral_sentiment_per} \n`
-            //             // + `Negative sentiment: ${negative_sentiment_per} \n`
-            //             + `Sentiment: ${average_sentiment} \n`
-            //             + `Joy: ${joy_per} \n`
-            //             + `Sadness: ${sadness_per} \n`
-            //             + `Tentative: ${tentative_per} \n`
-            //             + `Anger: ${anger_per} \n`
-            //             + `Fear: ${fear_per} \n`
-            //             + `Confident: ${confident_per} \n`
-            //             + `Analytical: ${analytical_per}`;
-            //         console.log(group_emotion_num);
-        
-            //         // var group_emotion = `Estimated group emotion in the past ${time_interval}s, in score or likelihood \n`
-            //         //                     + `Sentiment: ${average_sentiment} \n`
-            //         //                     + `Joy: ${average_joy} \n`
-            //         //                     + `Sadness: ${average_sadness} \n`
-            //         //                     + `Tentative: ${average_tentative} \n`
-            //         //                     + `Anger: ${average_anger} \n`
-            //         //                     + `Fear: ${average_fear} \n`
-            //         //                     + `Confident: ${average_confident} \n`
-            //         //                     + `Analytical: ${average_analytical}`;
-            //         // console.log(group_emotion);
-            //         var json_group_emotion = {
-            //             'sentiment': history_sentiment,
-            //             'tones': [joy_per, sadness_per, anger_per, fear_per, confident_per, analytical_per, tentative_per],
-            //             'turns': per_message_count
-            //         }
-                    
-            //         let image_rp_params = {
-            //             method : 'POST',
-            //             uri : "http://47.75.124.98:80/api/getimage",
-            //             body: json_group_emotion,
-            //             json: true
-            //         };
-        
-            //         var png_base64;
-            //         function get_image() {
-            //             return rp(image_rp_params)
-            //             .then(function (parsedBody){
-            //             // console.log(parsedBody);
-            //                 png_base64 = parsedBody;
-            //             })
-            //             .catch(function (err) {
-            //                 throw err;
-            //             });
-            //         }
-            //         if (task_mode == 'with') {
-            //             await get_image();
-            //             var GremoBot_dialogue = 'Hey, we can do better!';
-            //             var vis_emotion = {
-            //                 "type": "message",
-            //                 "text": GremoBot_dialogue,
-            //                 "attachments": [
-            //                     {
-            //                         "contentType": "image/png",
-            //                         "contentUrl": png_base64, //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADICAYAAABS39xVAAAABmJLR0QA/wD/AP+gvaeTAAACy0lEQVR4nO3cMQ7DMAwEQSrIvw2/3ClSpE0nLTDzgqsWrLhmZmaeazjEuncvgFO9dg8A+JdgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkCBaQIVhAhmABGYIFZAgWkCFYQIZgARmCBWQIFpAhWECGYAEZggVkvHcPgNM9M9fuDXy5sIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyPDT/USPH+LHWHPvnsCPCwvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CAjA+JWgcS+58wIAAAAABJRU5ErkJggg==",//optimizedSVGDataURI, // canvas.toDataURL(),//"https://studyabroad.ust.hk/files/1VV_8833.jpg", //optimizedSVGDataURI, //
-            //                         "name": "Group emotion summary"
-            //                     }
-            //                 ]
-            //             }
-            //             await turnContext.sendActivity(vis_emotion);
-            //         }
-
-            //         // await turnContext.sendActivity(group_emotion_num + '\n' + group_emotion);
-            //         // await turnContext.sendActivity(group_emotion_num);
-            //         // await turnContext.sendActivity(group_emotion);
-            //         start_time = date.getTime();
-            //         per_message_count = 0;
-            //         overall_sentiment = [];
-            //         overall_tone = {'joy': [], 'fear': [], 'sadness': [], 'anger': [], 'confident': [], 'tentative': [],  'analytical': []};
-            //         console.log('Stored average data is cleared again.');
-            //     }
-
-            //     // Code for send back messages immediately.
-            //     // await turnContext.sendActivity(`Analysis for member "${current_speaker}":  \n`
-            //     //                                 + `Sentiment: ${c.toFixed(3)} \n` 
-            //     //                                 + `${current_tone}`
-            //     //                                 + `\n I can monitor the text sentiment and tones!`);
-            //     // console.log(`你刚刚说的话的sentiment score为 ${c.toFixed(3)}`) // log some information if send successfully.
-
-        
 
 
         } else {
