@@ -19,11 +19,13 @@ Source code for a chatbot as a emotion regulator in text-based chat applications
 
 ## Message
 ### Arrangement
-![](img/design.PNG)
+<img src="img/design.png" width = "600" height = "400">
 
 ### Task and customized text message
-![](img/task.PNG) 
-![](img/dialogue.PNG)
+<img src="img/task.PNG" width = "388" height = "400">
+
+<img src="img/dialogue.PNG" width = "400" height = "700">
+
 
 ## Others
 - In submission to a conference poster track, will attach the paper if it gets accepted.
