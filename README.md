@@ -19,12 +19,12 @@ Source code for a chatbot as a emotion regulator in text-based chat applications
 
 ## Message
 ### Arrangement
-<img src="img/design.png" width = "400" height = "250">
+<img src="img/design.png" width = "400" height = "280">
 
 ### Task and customized text message
 <img src="img/task.PNG" width = "280" height = "280">
 
-<img src="img/dialogue.PNG" width = "300" height = "400">
+<img src="img/dialogue.PNG" width = "280" height = "430">
 
 
 ## Others
