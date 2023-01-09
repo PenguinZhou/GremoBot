@@ -19,7 +19,7 @@
     "co": "^4.6.0",
     "compression": "^1.6.2",
     "express": "^4.13.4",
-    "express-jwt": "^3.4.0",
+    "express-jwt": "^8.3.0",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {}
